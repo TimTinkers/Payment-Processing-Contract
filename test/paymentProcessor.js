@@ -3,7 +3,7 @@
  *
  * @author Tim Clancy
  * @version 1.0.0
- * @date 8.4.2019
+ * @date 11.4.2019
  */
 
 // Imports and testing requirements.
@@ -65,20 +65,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify processor parties can manipulate services.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the first party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: firstParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -87,15 +87,15 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test2';
-		var newServiceCost = ether(TWO);
+		newServiceName = 'test2';
+		newServiceCost = ether(TWO);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(1);
-		var serviceCost = await this.processor.getServiceCost(1);
-		var serviceEnabled = await this.processor.getServiceEnabled(1);
-		var nextServiceId = await this.processor.getNextServiceId();
+		serviceName = await this.processor.getServiceName(1);
+		serviceCost = await this.processor.getServiceCost(1);
+		serviceEnabled = await this.processor.getServiceEnabled(1);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -104,15 +104,15 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(TWO));
 
 		// Verify that the first party can update the second party's service.
-		var newServiceName = 'test3';
-		var newServiceCost = ether(ONE);
+		newServiceName = 'test3';
+		newServiceCost = ether(ONE);
 		await this.processor.updateService(1, newServiceName, newServiceCost, false, { from: firstParty }).should.be.fulfilled;
 
 		// Verify the service was updated.
-		var serviceName = await this.processor.getServiceName(1);
-		var serviceCost = await this.processor.getServiceCost(1);
-		var serviceEnabled = await this.processor.getServiceEnabled(1);
-		var nextServiceId = await this.processor.getNextServiceId();
+		serviceName = await this.processor.getServiceName(1);
+		serviceCost = await this.processor.getServiceCost(1);
+		serviceEnabled = await this.processor.getServiceEnabled(1);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -121,15 +121,15 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(TWO));
 
 		// Verify that the second party can update the first party's service.
-		var newServiceName = 'test4';
-		var newServiceCost = ether(TWO);
+		newServiceName = 'test4';
+		newServiceCost = ether(TWO);
 		await this.processor.updateService(0, newServiceName, newServiceCost, false, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was updated.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		serviceName = await this.processor.getServiceName(0);
+		serviceCost = await this.processor.getServiceCost(0);
+		serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -142,18 +142,18 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify the processor rejects non-existent updates.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the first party try to update a non-existent service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.updateService(0, newServiceName, newServiceCost, true, { from: firstParty }).should.be.rejectedWith(EVMRevert);
 
 		// Have the second party try to update a non-existent service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		newServiceName = 'test';
+		newServiceCost = ether(ONE);
 		await this.processor.updateService(0, newServiceName, newServiceCost, true, { from: secondParty }).should.be.rejectedWith(EVMRevert);
 	});
 
@@ -161,20 +161,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify processor non-parties cannot manipulate services.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the first party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: firstParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -191,20 +191,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify the first party can update its own address.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the first party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: firstParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -213,10 +213,10 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Verify that the first party can update itself.
-		var outFirstParty = await this.processor.getFirstParty();
+		let outFirstParty = await this.processor.getFirstParty();
 		outFirstParty.should.equal(firstParty);
 		await this.processor.updateFirstParty(updatedFirstParty, { from: firstParty }).should.be.fulfilled;
-		var outFirstParty = await this.processor.getFirstParty();
+		outFirstParty = await this.processor.getFirstParty();
 		outFirstParty.should.equal(updatedFirstParty);
 
 		// Verify that the old first party is no longer a party.
@@ -224,15 +224,15 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		await this.processor.updateService(0, newServiceName, newServiceCost, false, { from: firstParty }).should.be.rejectedWith(EVMRevert);
 
 		// Have the new first party add a new service.
-		var newServiceName = 'test2';
-		var newServiceCost = ether(TWO);
+		newServiceName = 'test2';
+		newServiceCost = ether(TWO);
 		await this.processor.addService(newServiceName, newServiceCost, { from: updatedFirstParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(1);
-		var serviceCost = await this.processor.getServiceCost(1);
-		var serviceEnabled = await this.processor.getServiceEnabled(1);
-		var nextServiceId = await this.processor.getNextServiceId();
+		serviceName = await this.processor.getServiceName(1);
+		serviceCost = await this.processor.getServiceCost(1);
+		serviceEnabled = await this.processor.getServiceEnabled(1);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -245,20 +245,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify the second party can update its own address.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -267,10 +267,10 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Verify that the second party can update itself.
-		var outSecondParty = await this.processor.getSecondParty();
+		let outSecondParty = await this.processor.getSecondParty();
 		outSecondParty.should.equal(secondParty);
 		await this.processor.updateSecondParty(updatedSecondParty, { from: secondParty }).should.be.fulfilled;
-		var outSecondParty = await this.processor.getSecondParty();
+		outSecondParty = await this.processor.getSecondParty();
 		outSecondParty.should.equal(updatedSecondParty);
 
 		// Verify that the old second party is no longer a party.
@@ -278,15 +278,15 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		await this.processor.updateService(0, newServiceName, newServiceCost, false, { from: secondParty }).should.be.rejectedWith(EVMRevert);
 
 		// Have the new second party add a new service.
-		var newServiceName = 'test2';
-		var newServiceCost = ether(TWO);
+		newServiceName = 'test2';
+		newServiceCost = ether(TWO);
 		await this.processor.addService(newServiceName, newServiceCost, { from: updatedSecondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(1);
-		var serviceCost = await this.processor.getServiceCost(1);
-		var serviceEnabled = await this.processor.getServiceEnabled(1);
-		var nextServiceId = await this.processor.getNextServiceId();
+		serviceName = await this.processor.getServiceName(1);
+		serviceCost = await this.processor.getServiceCost(1);
+		serviceEnabled = await this.processor.getServiceEnabled(1);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -313,20 +313,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify users can purchase services.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -335,8 +335,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Record the starting balances of all parties.
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		let firstPartyPot = await this.processor.getFirstPartyPot();
+		let secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ZERO));
 		secondPartyPot.should.be.bignumber;
@@ -344,26 +344,26 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that a user may purchase the service.
 		await this.processor.purchase(0, { from: player, value: ether(ONE) }).should.be.fulfilled;
-		var purchases = await this.processor.getPurchases(player);
+		let purchases = await this.processor.getPurchases(player);
 		purchases[0].should.be.bignumber;
 		assert(purchases[0].eq(ZERO));
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('0.5')));
 		secondPartyPot.should.be.bignumber;
 		assert(secondPartyPot.eq(ether('0.5')));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test1';
-		var newServiceCost = ether(TWO);
+		newServiceName = 'test1';
+		newServiceCost = ether(TWO);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(1);
-		var serviceCost = await this.processor.getServiceCost(1);
-		var serviceEnabled = await this.processor.getServiceEnabled(1);
-		var nextServiceId = await this.processor.getNextServiceId();
+		serviceName = await this.processor.getServiceName(1);
+		serviceCost = await this.processor.getServiceCost(1);
+		serviceEnabled = await this.processor.getServiceEnabled(1);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -373,11 +373,11 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that a user may purchase the service.
 		await this.processor.purchase(1, { from: player, value: ether(TWO) }).should.be.fulfilled;
-		var purchases = await this.processor.getPurchases(player);
+		purchases = await this.processor.getPurchases(player);
 		purchases[1].should.be.bignumber;
 		assert(purchases[1].eq(ONE));
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('1.5')));
 		secondPartyPot.should.be.bignumber;
@@ -385,11 +385,11 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that a user may purchase duplicates of a service.
 		await this.processor.purchase(1, { from: player, value: ether(TWO) }).should.be.fulfilled;
-		var purchases = await this.processor.getPurchases(player);
+		purchases = await this.processor.getPurchases(player);
 		purchases[2].should.be.bignumber;
 		assert(purchases[2].eq(ONE));
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('2.5')));
 		secondPartyPot.should.be.bignumber;
@@ -397,11 +397,11 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that a user may purchase duplicates of a service.
 		await this.processor.purchase(0, { from: player, value: ether(ONE) }).should.be.fulfilled;
-		var purchases = await this.processor.getPurchases(player);
+		purchases = await this.processor.getPurchases(player);
 		purchases[3].should.be.bignumber;
 		assert(purchases[3].eq(ZERO));
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('3')));
 		secondPartyPot.should.be.bignumber;
@@ -412,20 +412,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify that partial payments are rejected.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -434,8 +434,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Record the starting balances of all parties.
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		let firstPartyPot = await this.processor.getFirstPartyPot();
+		let secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ZERO));
 		secondPartyPot.should.be.bignumber;
@@ -449,20 +449,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify that the parties can each withdraw their funds.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -471,8 +471,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Record the starting balances of all parties.
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		let firstPartyPot = await this.processor.getFirstPartyPot();
+		let secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ZERO));
 		secondPartyPot.should.be.bignumber;
@@ -480,11 +480,11 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that a user may purchase the service.
 		await this.processor.purchase(0, { from: player, value: ether(ONE) }).should.be.fulfilled;
-		var purchases = await this.processor.getPurchases(player);
+		let purchases = await this.processor.getPurchases(player);
 		purchases[0].should.be.bignumber;
 		assert(purchases[0].eq(ZERO));
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('0.5')));
 		secondPartyPot.should.be.bignumber;
@@ -492,8 +492,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that the first party may withdraw.
 		await this.processor.withdrawFirst({ from: firstParty }).should.be.fulfilled;
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('0')));
 		secondPartyPot.should.be.bignumber;
@@ -501,8 +501,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that the second party may withdraw.
 		await this.processor.withdrawSecond({ from: secondParty }).should.be.fulfilled;
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('0')));
 		secondPartyPot.should.be.bignumber;
@@ -513,20 +513,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify that the parties cannot withdraw from empty pots.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -535,8 +535,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Record the starting balances of all parties.
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		let firstPartyPot = await this.processor.getFirstPartyPot();
+		let secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ZERO));
 		secondPartyPot.should.be.bignumber;
@@ -553,20 +553,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify that the parties cannot withdraw from one another.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -575,8 +575,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Record the starting balances of all parties.
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		let firstPartyPot = await this.processor.getFirstPartyPot();
+		let secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ZERO));
 		secondPartyPot.should.be.bignumber;
@@ -584,11 +584,11 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that a user may purchase the service.
 		await this.processor.purchase(0, { from: player, value: ether(ONE) }).should.be.fulfilled;
-		var purchases = await this.processor.getPurchases(player);
+		let purchases = await this.processor.getPurchases(player);
 		purchases[0].should.be.bignumber;
 		assert(purchases[0].eq(ZERO));
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('0.5')));
 		secondPartyPot.should.be.bignumber;
@@ -605,20 +605,20 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify that standard users cannot withdraw funds.', async function () {
 
 		// Verify the processor starts with no services.
-		var nextServiceId = await this.processor.getNextServiceId();
+		let nextServiceId = await this.processor.getNextServiceId();
 		nextServiceId.should.be.bignumber;
 		assert(nextServiceId.eq(ZERO));
 
 		// Have the second party add a new service.
-		var newServiceName = 'test';
-		var newServiceCost = ether(ONE);
+		let newServiceName = 'test';
+		let newServiceCost = ether(ONE);
 		await this.processor.addService(newServiceName, newServiceCost, { from: secondParty }).should.be.fulfilled;
 
 		// Verify the service was added.
-		var serviceName = await this.processor.getServiceName(0);
-		var serviceCost = await this.processor.getServiceCost(0);
-		var serviceEnabled = await this.processor.getServiceEnabled(0);
-		var nextServiceId = await this.processor.getNextServiceId();
+		let serviceName = await this.processor.getServiceName(0);
+		let serviceCost = await this.processor.getServiceCost(0);
+		let serviceEnabled = await this.processor.getServiceEnabled(0);
+		nextServiceId = await this.processor.getNextServiceId();
 		serviceName.should.equal(newServiceName);
 		serviceCost.should.be.bignumber;
 		assert(serviceCost.eq(newServiceCost));
@@ -627,8 +627,8 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 		assert(nextServiceId.eq(ONE));
 
 		// Record the starting balances of all parties.
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		let firstPartyPot = await this.processor.getFirstPartyPot();
+		let secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ZERO));
 		secondPartyPot.should.be.bignumber;
@@ -636,11 +636,11 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 
 		// Verify that a user may purchase the service.
 		await this.processor.purchase(0, { from: player, value: ether(ONE) }).should.be.fulfilled;
-		var purchases = await this.processor.getPurchases(player);
+		let purchases = await this.processor.getPurchases(player);
 		purchases[0].should.be.bignumber;
 		assert(purchases[0].eq(ZERO));
-		var firstPartyPot = await this.processor.getFirstPartyPot();
-		var secondPartyPot = await this.processor.getSecondPartyPot();
+		firstPartyPot = await this.processor.getFirstPartyPot();
+		secondPartyPot = await this.processor.getSecondPartyPot();
 		firstPartyPot.should.be.bignumber;
 		assert(firstPartyPot.eq(ether('0.5')));
 		secondPartyPot.should.be.bignumber;

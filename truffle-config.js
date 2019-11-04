@@ -1,21 +1,21 @@
 require('babel-register');
 require('babel-polyfill');
 
-var HDWalletProvider = require("truffle-hdwallet-provider");
-var configuration = require("./configuration");
+var HDWalletProvider = require('truffle-hdwallet-provider');
+var configuration = require('./configuration');
 
 module.exports = {
 	networks: {
 		ganache: {
-			host: "localhost",
+			host: 'localhost',
 			port: 8545,
-			network_id: "*", // Match any network id
+			network_id: '*', // Match any network id
 			gas: 4698712
 		},
 		develop: {
-			host: "localhost",
+			host: 'localhost',
 			port: 9545,
-			network_id: "*", // Match any network id
+			network_id: '*', // Match any network id
 			gas: 4698712
 		},
 		kovan: {
@@ -25,15 +25,15 @@ module.exports = {
 			gas: 4698712
 		}
 	},
-  mocha: {
-    timeout: 100000
-  },
-  compilers: {
-    solc: {
-  		optimizer: {
-  			enabled: true,
-  			runs: 200
-  		}
-  	}
-  }
+	mocha: {
+		timeout: 100000
+	},
+	compilers: {
+		solc: {
+			optimizer: {
+				enabled: true,
+				runs: 200
+			}
+		}
+	}
 };
