@@ -7,6 +7,7 @@ if (result.error) {
 // Imports.
 require('babel-register');
 require('babel-polyfill');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 // Configure Truffle with available development networks.
 module.exports = {
