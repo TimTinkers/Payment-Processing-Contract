@@ -1,26 +1,32 @@
+// Retrieve and parse environment variables.
+const result = require('dotenv').config();
+if (result.error) {
+	console.error(result.parsed);
+}
+
+// Imports.
 require('babel-register');
 require('babel-polyfill');
 
-var HDWalletProvider = require('truffle-hdwallet-provider');
-var configuration = require('./configuration');
-
+// Configure Truffle with available development networks.
 module.exports = {
 	networks: {
 		ganache: {
 			host: 'localhost',
 			port: 8545,
-			network_id: '*', // Match any network id
+			network_id: '*',
 			gas: 4698712
 		},
 		develop: {
 			host: 'localhost',
 			port: 9545,
-			network_id: '*', // Match any network id
+			network_id: '*',
 			gas: 4698712
 		},
 		kovan: {
-			provider: new HDWalletProvider(configuration.mnemonic,
-				configuration.nodeURL),
+			provider: function () {
+				return new HDWalletProvider(process.env.MNEMONIC, process.env.NODE_URL);
+			},
 			network_id: 42,
 			gas: 4698712
 		}
