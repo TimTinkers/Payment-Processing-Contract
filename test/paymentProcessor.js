@@ -17,15 +17,9 @@ require('chai')
 // Import and test the PaymentProcessor.
 const PaymentProcessor = artifacts.require('PaymentProcessor');
 contract('PaymentProcessor', function ([ firstParty, secondParty, player, updatedFirstParty, updatedSecondParty ]) {
-
-	// Testing constants.
 	const ZERO = new BigNumber(0);
-	const ONE_HALF = new BigNumber(0.5);
 	const ONE = new BigNumber(1);
-	const ONE_AND_ONE_HALF = new BigNumber(1.5);
 	const TWO = new BigNumber(2);
-	const TWO_AND_ONE_HALF = new BigNumber(2.5);
-	const THREE = new BigNumber(3);
 
 	// Before conducting any tests, advance to the next block to correctly read
 	// time in the solidity "now" function interpreted by testrpc.
@@ -44,7 +38,7 @@ contract('PaymentProcessor', function ([ firstParty, secondParty, player, update
 	it('Verify processor has correct initial state.',
 	async function () {
 
-		// Verify the processor instance exists.
+		// Verify that the processor exists.
 		this.processor.should.exist;
 
 		// Retrieve counts from the exchange instance.

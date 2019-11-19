@@ -11,6 +11,17 @@
     "payment",
     "handler"
   ],
+  "standard": {
+    "env": [ "mocha" ],
+    "globals": [
+      "web3",
+      "artifacts",
+      "contract",
+      "before",
+      "beforeEach",
+      "it"
+    ]
+  },
   "author": "Tim Clancy",
   "license": "",
   "dependencies": {

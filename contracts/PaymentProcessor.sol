@@ -75,6 +75,9 @@ contract PaymentProcessor {
   // A mapping to record all services purchased by a given address.
   mapping (address => uint256[]) private _purchases;
 
+  // A mapping to record all orders purchased by a given address as a delimited string.
+  mapping (address => string) private _orders;
+
   // The pot containing the first party's income.
   uint256 _firstPartyPot;
 
@@ -126,6 +129,11 @@ contract PaymentProcessor {
   // Returns a user's purchases.
   function getPurchases(address purchaser) public view returns (uint256[] memory purchaseHistory) {
     return _purchases[purchaser];
+  }
+
+  // Returns a user's orders.
+  function getOrders(address purchaser) public view returns (string memory orderHistory) {
+    return _orders[purchaser];
   }
 
   // Get the value of the first party's pot.
@@ -183,9 +191,10 @@ contract PaymentProcessor {
   }
 
   // Allows a user to purchase a service.
-  function purchase(uint256 serviceId) payable public {
+  function purchase(uint256 serviceId, string memory orderId) payable public {
     require(msg.value >= _serviceCosts[serviceId]);
     _purchases[msg.sender].push(serviceId);
+    _orders[msg.sender] = string(abi.encodePacked(_orders[msg.sender], ';', orderId));
     uint256 firstPortion = msg.value.div(2);
     uint256 secondPortion = msg.value.sub(firstPortion);
     _firstPartyPot = _firstPartyPot.add(firstPortion);
