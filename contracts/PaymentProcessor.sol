@@ -60,23 +60,11 @@ contract PaymentProcessor {
   // The second party to receive withdrawals.
   address payable private _secondParty;
 
-  // The identifier to use for the next service offered.
-  uint256 private _nextServiceId = 0;
-
-  // The names of each service offered by this processor.
-  mapping (uint256 => string) private _serviceNames;
-
-  // The cost in wei for each service offered by this processor.
-  mapping (uint256 => uint256) private _serviceCosts;
-
-  // Whether or not a particular service is enabled for use.
-  mapping (uint256 => bool) private _serviceEnabled;
-
-  // A mapping to record all services purchased by a given address.
-  mapping (address => uint256[]) private _purchases;
-
   // A mapping to record all orders purchased by a given address as a delimited string.
   mapping (address => string) private _orders;
+
+  // A mapping to record the amount paid by a given address towards each order.
+  mapping (address => uint256[]) private _payments;
 
   // The pot containing the first party's income.
   uint256 _firstPartyPot;
@@ -106,34 +94,14 @@ contract PaymentProcessor {
     return _secondParty;
   }
 
-  // Get the next available service identifier.
-  function getNextServiceId() public view returns (uint256 nextServiceId) {
-    return _nextServiceId;
-  }
-
-  // Get a specified service's name.
-  function getServiceName(uint256 serviceId) public view returns (string memory name) {
-    return _serviceNames[serviceId];
-  }
-
-  // Get a specified service's cost.
-  function getServiceCost(uint256 serviceId) public view returns (uint256 cost) {
-    return _serviceCosts[serviceId];
-  }
-
-  // Get a specified service's enabled state.
-  function getServiceEnabled(uint256 serviceId) public view returns (bool enabled) {
-    return _serviceEnabled[serviceId];
-  }
-
-  // Returns a user's purchases.
-  function getPurchases(address purchaser) public view returns (uint256[] memory purchaseHistory) {
-    return _purchases[purchaser];
-  }
-
   // Returns a user's orders.
   function getOrders(address purchaser) public view returns (string memory orderHistory) {
     return _orders[purchaser];
+  }
+
+  // Returns a user's payments.
+  function getPayments(address purchaser) public view returns (uint256[] memory paymentHistory) {
+    return _payments[purchaser];
   }
 
   // Get the value of the first party's pot.
@@ -158,28 +126,6 @@ contract PaymentProcessor {
     _;
   }
 
-  // This modifier allows interaction only from the addresses party to this contract.
-  modifier onlyParties {
-    require(msg.sender == _firstParty || msg.sender == _secondParty);
-    _;
-  }
-
-  // Add a new service to this payment processor.
-  function addService(string memory name, uint256 cost) onlyParties public {
-    _serviceNames[_nextServiceId] = name;
-    _serviceCosts[_nextServiceId] = cost;
-    _serviceEnabled[_nextServiceId] = true;
-    _nextServiceId++;
-  }
-
-  // Updates the status of an existing service offered by this payment processor.
-  function updateService(uint256 serviceId, string memory name, uint256 cost, bool enabled) onlyParties public {
-    require(serviceId < _nextServiceId);
-    _serviceNames[serviceId] = name;
-    _serviceCosts[serviceId] = cost;
-    _serviceEnabled[serviceId] = enabled;
-  }
-
   // Allows the first party to select a new address to serve in its stead.
   function updateFirstParty(address payable newFirstParty) onlyFirst public {
     _firstParty = newFirstParty;
@@ -191,9 +137,8 @@ contract PaymentProcessor {
   }
 
   // Allows a user to purchase a service.
-  function purchase(uint256 serviceId, string memory orderId) payable public {
-    require(msg.value >= _serviceCosts[serviceId]);
-    _purchases[msg.sender].push(serviceId);
+  function purchase(string memory orderId) payable public {
+    _payments[msg.sender].push(msg.value);
     _orders[msg.sender] = string(abi.encodePacked(_orders[msg.sender], ';', orderId));
     uint256 firstPortion = msg.value.div(2);
     uint256 secondPortion = msg.value.sub(firstPortion);
